@@ -1,28 +1,38 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import styled from 'styled-components';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+const wordsToRemember = [
+  'discombobulate',
+  'quintessential',
+  'conundrum',
+  'occlud',
+  'exquisite',
+  'vituperative',
+  'bewildering'
+];
+
+const Wrapper = styled.div`
+  width: 100%;
+  overflow: hidden;
+`
+
+const Card = styled.div`
+  float: left
+  width: 150px;
+  height: 100px;
+  border-top: 5px solid #89D4E8;
+  border-radius: 0 0 5px 5px;
+  margin: 20px;
+  text-align: center;
+  padding-top: 60px;
+  box-shadow: 7px 7px 30px -4px rgba(0,0,0,0.62);
+`
+
+const App = () =>
+  <Wrapper>
+    {
+      wordsToRemember.map(word => <Card key={word}>{ word }</Card>)
+    }
+  </Wrapper>
 
 export default App;
