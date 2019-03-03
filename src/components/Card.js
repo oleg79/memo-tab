@@ -29,4 +29,5 @@ export default styled(Card)`
   border-top: 4px solid ${props => colors[props.number] || colors[0]};
   border-radius: 0 0 5px 5px;
   box-shadow: 7px 7px 30px -4px rgba(0,0,0,0.62);
+  grid-column: ${props => props.gridColumn};
 `
