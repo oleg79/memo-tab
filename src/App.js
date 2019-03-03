@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useWebSQL, useLocalStorageState } from './hooks'
 import Card from './components/Card'
@@ -37,7 +37,7 @@ const Wrapper = styled.div`
 //   grid-template-columns: 1fr 1fr 1fr
 const CardBoard = styled.div`
   display: grid;
-  grid-column-gap: 100px;
+  grid-column-gap: 50px;
   grid-row-gap: 35px;
   grid-auto-rows: repeat(2, minmax(200px, auto));
   padding: 0 80px;
@@ -57,6 +57,7 @@ const gridsColumn = [
 const App = ({ dbSettings, tableSettings }) => {
   const [ state, crud ] = useWebSQL(dbSettings, tableSettings)
   const [ cardsIds, setCardsIds ] = useLocalStorageState('memo-tab:selectedCards',[])
+  const [ clickedIndex, setClickedIndex ] = useState(-1)
 
   const handleDelete = id => {
     crud.delete(id)
@@ -67,11 +68,22 @@ const App = ({ dbSettings, tableSettings }) => {
 
   return (
     <Wrapper>
-      <NewCardForm onAdd={(payload, data) => crud.create(payload, data)}/>
+      {/* <NewCardForm onAdd={(payload, data) => crud.create(payload, data)}/> */}
       <CardBoard>
-        { state.memos.filter(({ id }) => cardsIds.includes(id)).map((card, index) => <Card key={card.id} number={index} {...card} gridColumn={gridColumn[index]}/>) }
+        { state.memos
+          .filter(({ id }) => cardsIds.includes(id))
+          .map((card, index) => 
+            <Card
+              key={card.id}
+              number={index}
+              gridColumn={gridColumn[index]}
+              clicked={clickedIndex === index}
+              onClick={() => setClickedIndex(clickedIndex === index ? -1 : index)}
+              {...card}
+            />
+          ) }
       </CardBoard>
-      <MemoList memos={state.memos} cardsIds={cardsIds} setCardsIds={setCardsIds} handleDelete={handleDelete}/>
+      {/* <MemoList memos={state.memos} cardsIds={cardsIds} setCardsIds={setCardsIds} handleDelete={handleDelete}/> */}
     </Wrapper>
   )
 }

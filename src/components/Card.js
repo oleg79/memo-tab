@@ -8,11 +8,20 @@ const Front = styled.div`
 `
 
 const Card = props => {
-  const { front, back, desc, className } = props
+  const { front, back, desc, className, clicked , onClick} = props
   return (
-    <div className={className}>
-      <Front primary>{ front }</Front>
-      <Front>{ front }</Front>
+    <div className={className} onClick={onClick}>
+      { clicked ?
+        <>
+          <Front primary>{ back }</Front>
+          <Front>{ desc }</Front>
+        </> :
+        <>
+          <Front primary>{ front }</Front>
+          <Front>{ front }</Front>
+        </>
+      }
+      
     </div>
   )
 }
@@ -26,8 +35,10 @@ export default styled(Card)`
   flex-direction: column;
   justify-content: center;
   height: 200px;
+  width: 340px;
   border-top: 4px solid ${props => colors[props.number] || colors[0]};
   border-radius: 0 0 5px 5px;
   box-shadow: 7px 7px 30px -4px rgba(0,0,0,0.62);
   grid-column: ${props => props.gridColumn};
+  cursor: pointer;
 `
