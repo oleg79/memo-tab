@@ -1,8 +1,8 @@
 import { useEffect, useReducer } from 'react'
 
 const initialState = {
-    cards: []
-  }
+  memos: []
+}
   
   const INIT = 'INIT'
   const INSERT = 'INSERT'
@@ -12,13 +12,13 @@ const initialState = {
   const reducer = (state, action) => {
     switch (action.type) {
       case INIT:
-        return { cards: action.payload }
+        return { memos: action.payload }
       case INSERT:
-        return { cards: [...state.cards, action.payload] }
+        return { memos: [...state.memos, action.payload] }
       case UPDATE:
         return state
       case DELETE:
-        return { cards: state.cards.filter(({ id }) => id !== action.payload) }
+        return { memos: state.memos.filter(({ id }) => id !== action.payload) }
       default:
         return state
     }
@@ -40,12 +40,27 @@ const initialState = {
   
     return `INSERT INTO ${tableName} (${fields.join(', ')}) VALUES (${fields.map(__ => '?').join(', ')})`
   }
+
+  const getCRUD = (dispatch, db, tableName, schema) => ({
+    create(payload, data) {
+      db.transaction(t => {
+        t.executeSql(generateInsertSQL({ tableName, schema }), data, (__, results) => {
+          dispatch({ type: INSERT, payload: { ...payload, id: results.insertId } })
+        })
+      })
+    },
+    delete(payload) {
+      db.transaction(t => { t.executeSql(`DELETE from ${tableName} WHERE id=?`, [payload], () => {
+        dispatch({ type: DELETE, payload })
+      })})
+    }
+  })
   
   const useWebSQL = ({ dbName, version, description, size }, { tableName, schema }, initData = []) => {
     const [state, dispatch] = useReducer(reducer, initialState)
-  
+    const mydb = openDatabase(dbName, version, description, size)
+
     useEffect(() => {
-      const mydb = openDatabase(dbName, version, description, size)
       const fields = generateFields(schema)
       mydb.transaction(t => {
         t.executeSql(`CREATE TABLE IF NOT EXISTS ${tableName} ${fields}`)
@@ -63,7 +78,7 @@ const initialState = {
       })
     }, [])
   
-    return [state, dispatch];
+    return [state, getCRUD(dispatch, mydb, tableName, schema)];
   }
 
   export default useWebSQL
