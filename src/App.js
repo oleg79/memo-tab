@@ -7,8 +7,21 @@ import MemoList from './components/MemoList'
 
 
 const Wrapper = styled.div`
-  width: 100%;
-  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+`
+
+const CardBoard = styled.div`
+  display: grid;
+  grid-column-gap: 100px;
+  grid-row-gap: 35px;
+  grid-auto-rows: minmax(200px, auto);
+  grid-template-columns: 1fr 1fr 1fr
+  grid-template-rows: 200px 200px;
+  justify-content: space-around;
+  align-items: center;
+  align-content: space-evenly;
+  padding: 0 100px;
 `
 
 const App = ({ dbSettings, tableSettings }) => {
@@ -23,9 +36,9 @@ const App = ({ dbSettings, tableSettings }) => {
   return (
     <Wrapper>
       <NewCardForm onAdd={(payload, data) => crud.create(payload, data)}/>
-      {
-        state.memos.filter(({ id }) => cardsIds.includes(id)).map(card => <Card key={card.id} {...card}/>)
-      }
+      <CardBoard>
+        { state.memos.filter(({ id }) => cardsIds.includes(id)).map((card, index) => <Card key={card.id} number={index} {...card}/>) }
+      </CardBoard>
       <MemoList memos={state.memos} cardsIds={cardsIds} setCardsIds={setCardsIds} handleDelete={handleDelete}/>
     </Wrapper>
   )
