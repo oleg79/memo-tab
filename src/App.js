@@ -36,7 +36,6 @@ const CardBoard = styled.div`
   display: grid;
   grid-column-gap: 50px;
   grid-row-gap: 50px;
-  grid-auto-rows: repeat(2, minmax(200px, auto));
   padding: 0 80px;
   filter: blur(${props => props.blur ? 5 : 0}px);
 `
@@ -55,7 +54,7 @@ const App = ({ dbSettings, tableSettings }) => {
   const [ state, crud ] = useWebSQL(dbSettings, tableSettings)
   const [ cardsIds, setCardsIds ] = useLocalStorageState('memo-tab:selectedCards',[])
   const [ clickedIndex, setClickedIndex ] = useState(-1)
-  const [ isMenuOpen, setMenuOpen ] = useState(true)
+  const [ isMenuOpen, setMenuOpen ] = useState(false)
 
   const handleDelete = id => {
     crud.delete(id)

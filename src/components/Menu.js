@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import NewCardForm from './NewCardForm'
 import MemoList from './MemoList'
-import { Tabs, Tab } from './Tabs'
+import { Tabs, Tab, ContentTab } from './Tabs'
 
 const OpenedMenu = styled.div`
   position: absolute;
@@ -42,18 +42,20 @@ const Menu = props => {
       <Header>
         MENU <span onClick={close}>&times;</span>
       </Header>
+
       <Tabs initiaTab='newMemo'>
-        {(visibleTab, setVisibleTab) => (
-          <>
-            <Tab name='newMemo' visible={visibleTab === 'newMemo'} setVisibleTab={setVisibleTab}>
-              <NewCardForm onAdd={onAdd}/>
-            </Tab>
-            <Tab name='memoList' visible={visibleTab === 'memoList'} setVisibleTab={setVisibleTab}>
-              <MemoList {...memoListProps}/>
-            </Tab>
-          </>
-        )}
+        <Tab name='newMemo'>new memo</Tab>
+        <Tab name='memoList'>memo list</Tab>
+
+        <ContentTab name='newMemo'>
+          <NewCardForm onAdd={onAdd}/>
+        </ContentTab>
+
+        <ContentTab name='memoList'>
+          <MemoList {...memoListProps}/>
+        </ContentTab>
       </Tabs>
+
     </OpenedMenu>
   ) : (
     <MenuToggler onClick={open}/>
